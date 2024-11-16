@@ -7,6 +7,7 @@ const folderStructureData = {
             id: '2',
             name: 'index.html',
             isFolder: false,
+            content: 'item 2'
         },
         {
             id: '3',
@@ -17,6 +18,7 @@ const folderStructureData = {
                     id: '4',
                     name: 'app.js',
                     isFolder: false,
+                    content: 'item 4'
                 },
                 {
                     id: '5',
@@ -27,11 +29,13 @@ const folderStructureData = {
                             id: '6',
                             name: 'main.jsx',
                             isFolder: false,
+                            content: 'item 6'
                         },
                         {
                             id: '7',
                             name: 'utils.js',
                             isFolder: false,
+                            content: 'item 7'
                         },
                     ],
                 },
@@ -39,6 +43,7 @@ const folderStructureData = {
                     id: '8',
                     name: 'app.css',
                     isFolder: false,
+                    content: 'item 8'
                 },
             ],
         },

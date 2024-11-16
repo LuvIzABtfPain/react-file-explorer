@@ -4,19 +4,46 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import folderStructureData, {deleteById, findById} from "../structureData/structure.js";
 import {MdOutlineArrowDropDown, MdOutlineArrowRight} from "react-icons/md";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
-
-export default function Folder({ item , onChangeData}) {
+export default function Folder({ item , onChangeData, selectedId , onChangeSelectedId,}) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [openFolder, setOpenFolder] = React.useState(false);
+    const [openFile, setOpenFile] = React.useState(false);
+    const [name, setName] = useState('')
+
+    const handleClickFolderOpen = () => {
+        setOpenFolder(true);
+    };
+
+    const handleClickFileOpen = () => {
+        setOpenFile(true);
+    };
+
+    const handleClose = () => {
+        setName('')
+        setOpenFolder(false);
+        setOpenFile(false);
+    };
 
     const handleAddFolder = (parentFolderId) => {
+        if(!name) {
+            alert('Please enter name')
+            return
+        }
         console.log('folderStructureData', folderStructureData)
         const res = findById(folderStructureData, parentFolderId)
         console.log('res', res)
 
         const newFolder = {
             id: Date.now().toString(),
-            name: Date.now().toString(),
+            name: name,
             isFolder: true,
             items: []
         }
@@ -25,15 +52,20 @@ export default function Folder({ item , onChangeData}) {
 
         res.items.push(newFolder)
         onChangeData({...folderStructureData})
+        handleClose()
     };
 
     const handleAddFile = (parentFolderId) => {
-        console.log('onChangeData', onChangeData)
+        if(!name) {
+            alert('Please enter name')
+            return
+        }
         const res = findById(folderStructureData, parentFolderId)
         const newFile = {
             id: Date.now().toString(),
-            name: Date.now().toString(),
-            isFolder: false
+            name: name,
+            isFolder: false,
+            content: ''
         }
 
         if(!res) {return}
@@ -46,21 +78,91 @@ export default function Folder({ item , onChangeData}) {
         }
         res.items.push(newFile)
         onChangeData({...folderStructureData})
+        handleClose()
     };
 
     const handleDelete = (id) => {
-        // const res = findParent(folderStructureData, id)
-        // const res = deleteByID(id)
-        // if(!res) return
         deleteById(folderStructureData, id)
         onChangeData({...folderStructureData})
-
-        // res.items = res.items.filter(item => item.id !== id)
     }
 
     return (
         <>
-            <div className={"flex items-center gap-2 cursor-pointer p-0.5 bg-gray-300"}>
+            <Dialog
+                open={openFolder}
+                onClose={handleClose}
+                maxWidth={'xs'}
+                fullWidth
+                PaperProps={{
+                    component: 'form',
+                    onSubmit: (event) => {
+                        event.preventDefault();
+                        const formData = new FormData(event.currentTarget);
+                        const formJson = Object.fromEntries(formData.entries());
+                        const email = formJson.email;
+                        console.log(email);
+                        handleClose();
+                    },
+                }}
+            >
+                <DialogTitle>Add Folder</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        fullWidth
+                        variant="standard"
+                        value={name}
+                        onChange={(e) => {
+                             setName(e.target.value)
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={() => handleAddFolder(item.id)}>Save</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openFile}
+                onClose={handleClose}
+                maxWidth={'xs'}
+                fullWidth
+                PaperProps={{
+                    component: 'form',
+                    onSubmit: (event) => {
+                        event.preventDefault();
+                        const formData = new FormData(event.currentTarget);
+                        const formJson = Object.fromEntries(formData.entries());
+                        const file = formJson.name;
+                        console.log(name);
+                        handleClose();
+                    },
+                }}
+            >
+                <DialogTitle>Add File</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        fullWidth
+                        variant="standard"
+                        value={name}
+                        onChange={(e) => {
+                            setName(e.target.value)
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={() => handleAddFile(item.id)}>Save</Button>
+                </DialogActions>
+            </Dialog>
+            <div className={"flex items-center gap-2 cursor-pointer p-0.5"}>
                 <div className={"flex items-center"} onClick={() => setIsExpanded((prevState) => !prevState)}>
                 {isExpanded ? <MdOutlineArrowDropDown className="transform transition-transform duration-200"/> : <MdOutlineArrowRight className="transition-transform duration-200"/>}
                 <span>
@@ -68,8 +170,8 @@ export default function Folder({ item , onChangeData}) {
                 </span>
                 </div>
                 <div className={'flex items-center gap-2'}>
-                <IoIosAddCircleOutline onClick={() => handleAddFolder(item.id)} title={"Add Folder"} className={"text-blue-500"}/>
-                <IoIosAddCircleOutline onClick={() => handleAddFile(item.id)} title={"Add File"} className={"text-green-500"}/>
+                <IoIosAddCircleOutline onClick={handleClickFolderOpen} title={"Add Folder"} className={"text-blue-500"}/>
+                <IoIosAddCircleOutline onClick={handleClickFileOpen} title={"Add File"} className={"text-green-500"}/>
                 <CiCircleMinus  onClick={() => handleDelete(item.id)}  title={"Delete"} className={"text-red-500"} />
                 </div>
             </div>
@@ -79,7 +181,21 @@ export default function Folder({ item , onChangeData}) {
             >
                 {isExpanded &&
                     item.items.map((item) =>
-                        item.isFolder ? <Folder onChangeData={onChangeData} key={item.id} item={item} /> : <File onChangeData={onChangeData} key={item.id} item={item} />
+                        item.isFolder ?
+                            <Folder
+                                onChangeSelectedId={onChangeSelectedId}
+                                onChangeData={onChangeData}
+                                selectedId={selectedId}
+                                key={item.id}
+                                item={item}
+                           /> :
+                            <File
+                                selectedId={selectedId}
+                                onChangeData={onChangeData}
+                                key={item.id}
+                                item={item}
+                                onChangeSelectedId={onChangeSelectedId}
+                            />
                     )}
             </div>
         </>

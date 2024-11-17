@@ -176,7 +176,7 @@ function App() {
                     <div className={"flex gap-2"}>
                         <IoIosAddCircleOutline onClick={() => setOpenFolder(true)} title={"Add Root Folder"} className={"text-blue-500"}/>
                         <IoIosAddCircleOutline onClick={() => setOpenFile(true)} title={"Add Root File"} className={"text-green-500"}/>
-                        <CiCircleMinus  title={"Delete"} className={"text-red-500"} />
+                        {/*<CiCircleMinus  title={"Delete"} className={"text-red-500"} />*/}
                     </div>
                     {data.items.map((item) => {
                         return item.isFolder ? <Folder

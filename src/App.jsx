@@ -18,7 +18,7 @@ import Button from "@mui/material/Button";
 
 function App() {
     const [data, setData] = useState(folderStructureData)
-    const [selectedId, setSelectId] = useState(null)
+    const [selectedId, setSelectId] = useState('2')
     const [openFolder, setOpenFolder] = React.useState(false);
     const [openFile, setOpenFile] = React.useState(false);
     const [name, setName] = useState('')

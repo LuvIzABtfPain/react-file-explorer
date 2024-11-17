@@ -17,6 +17,7 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
     const [openFolder, setOpenFolder] = React.useState(false);
     const [openFile, setOpenFile] = React.useState(false);
     const [name, setName] = useState('')
+    const [content, setContent] = useState('')
 
     const handleClickFolderOpen = () => {
         setOpenFolder(true);
@@ -28,6 +29,7 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
 
     const handleClose = () => {
         setName('')
+        setContent('')
         setOpenFolder(false);
         setOpenFile(false);
     };
@@ -50,6 +52,13 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
 
         if(!res) {return}
 
+        for(const item of res.items) {
+            if(item.isFolder && (item.name === newFolder.name)) {
+                alert("Folder already exists")
+                return
+            }
+        }
+
         res.items.push(newFolder)
         onChangeData({...folderStructureData})
         handleClose()
@@ -65,14 +74,14 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
             id: Date.now().toString(),
             name: name,
             isFolder: false,
-            content: ''
+            content: content
         }
 
         if(!res) {return}
 
         for(const item of res.items) {
             if(!item.isFolder && (item.name === newFile.name)) {
-                alert("File already exist")
+                alert("File already exists")
                 return
             }
         }
@@ -149,11 +158,24 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
                         required
                         margin="dense"
                         id="name"
+                        label="File Name"
                         fullWidth
                         variant="standard"
                         value={name}
                         onChange={(e) => {
                             setName(e.target.value)
+                        }}
+                    />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="content"
+                        label="File Content"
+                        fullWidth
+                        variant="standard"
+                        value={content}
+                        onChange={(e) => {
+                            setContent(e.target.value)
                         }}
                     />
                 </DialogContent>

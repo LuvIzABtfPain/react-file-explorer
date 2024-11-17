@@ -2,7 +2,7 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 
 export default function Description() {
     return (
-        <div className={"mb-4"}>
+        <div className={"ml-2 mb-4"}>
             <span>Button List:</span>
             <div className={"flex items-center"}>
                 <IoIosAddCircleOutline className={"text-blue-500"}/>

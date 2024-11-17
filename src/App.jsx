@@ -196,7 +196,8 @@ function App() {
                             <CiFileOn/>
                             <h2>{selectedFile.name}</h2>
                         </div>
-                        <div className={"mt-2"}>{selectedFile.content}</div>
+                        <div className={"mt-2"} dangerouslySetInnerHTML={{ __html: selectedFile.content }}>
+                        </div>
                     </div>}
                 </div>
             </div>

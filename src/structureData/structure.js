@@ -5,9 +5,18 @@ const folderStructureData = {
     items: [
         {
             id: '2',
-            name: 'index.html',
+            name: 'core_features.html',
             isFolder: false,
-            content: 'item 2'
+            content: '<p>This is core features: </p>\n' +
+                '                            <ul>\n' +
+                '                                <li>Add new folder and files.</li>\n' +
+                '                                <li>Add subfolder.</li>\n' +
+                '                                <li>Cant add folder or file with the same name in the same folder.</li>\n' +
+                '                                <li>Dialog for Alert and Form add folder file.</li>\n' +
+                '                                <li>Buttons in the top of folder tree effect on root folder.</li>\n' +
+                '                                <li>Display the content and name of the file.</li>\n' +
+                '                                <li>Highlight file selected.</li>\n' +
+                '                            </ul>'
         },
         {
             id: '3',

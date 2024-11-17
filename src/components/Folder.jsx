@@ -16,6 +16,7 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
     const [isExpanded, setIsExpanded] = useState(false);
     const [openFolder, setOpenFolder] = React.useState(false);
     const [openFile, setOpenFile] = React.useState(false);
+    const [openDelete, setOpenDelete] = React.useState(false);
     const [name, setName] = useState('')
     const [content, setContent] = useState('')
 
@@ -93,7 +94,17 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
     const handleDelete = (id) => {
         deleteById(folderStructureData, id)
         onChangeData({...folderStructureData})
+        setOpenDelete(false);
     }
+
+    function handleCloseDelete() {
+        setOpenDelete(false);
+    }
+
+
+    function handleClickDeleteOpen() {
+        setOpenDelete(true);
+    };
 
     return (
         <>
@@ -184,6 +195,22 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
                     <Button onClick={() => handleAddFile(item.id)}>Save</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                open={openDelete}
+                onClose={handleCloseDelete}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Delete this folder?"}
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleCloseDelete}>Cancel</Button>
+                    <Button onClick={() => handleDelete(item.id)} autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <div className={"flex items-center gap-2 cursor-pointer p-0.5"}>
                 <div className={"flex items-center"} onClick={() => setIsExpanded((prevState) => !prevState)}>
                 {isExpanded ? <MdOutlineArrowDropDown className="transform transition-transform duration-200"/> : <MdOutlineArrowRight className="transition-transform duration-200"/>}
@@ -194,7 +221,7 @@ export default function Folder({ item , onChangeData, selectedId , onChangeSelec
                 <div className={'flex items-center gap-2'}>
                 <IoIosAddCircleOutline onClick={handleClickFolderOpen} title={"Add Folder"} className={"text-blue-500"}/>
                 <IoIosAddCircleOutline onClick={handleClickFileOpen} title={"Add File"} className={"text-green-500"}/>
-                <CiCircleMinus  onClick={() => handleDelete(item.id)}  title={"Delete"} className={"text-red-500"} />
+                <CiCircleMinus  onClick={handleClickDeleteOpen}  title={"Delete"} className={"text-red-500"} />
                 </div>
             </div>
 
